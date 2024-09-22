@@ -25,6 +25,10 @@ namespace Store_MVC.Controllers
         [HttpPost]
         public IActionResult Create(Category category)
         {
+            if(category.Name.ToLower() == category.DisplayOrder.ToString())
+            {
+                ModelState.AddModelError("", "Category Name Cann't be same as Display Order");
+            }
             if (ModelState.IsValid)
             {
                 db.Categories.Add(category);
