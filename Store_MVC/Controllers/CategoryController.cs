@@ -37,5 +37,30 @@ namespace Store_MVC.Controllers
             }
             return View(category);
         }
+        [HttpGet]
+        public IActionResult Edit(int? id)
+        {
+            if(id == null || id == 0)
+            {
+                return NotFound();
+            }
+            Category? category = db.Categories.Find(id);
+            if (category is null)
+                return NotFound();
+         
+            return View(category);
+        }
+        [HttpPost]
+        public IActionResult Edit(Category category)
+        {
+            
+            if (ModelState.IsValid)
+            {
+                db.Categories.Update(category);
+                db.SaveChanges();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(category);
+        }
     }
 }
