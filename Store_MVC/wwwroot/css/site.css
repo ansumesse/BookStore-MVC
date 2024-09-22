@@ -20,3 +20,14 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.linkedin-link {
+    text-decoration: none; /* Remove underline */
+    color: #0a66c2; /* LinkedIn blue color */
+    font-weight: bold;
+}
+
+    .linkedin-link:hover {
+        color: #0056b3; /* Slightly darker blue on hover */
+        text-decoration: underline; /* Add underline on hover */
+    }
