@@ -62,5 +62,26 @@ namespace Store_MVC.Controllers
             }
             return View(category);
         }
+        [HttpGet]
+        public IActionResult Delete(int? id)
+        {
+            if (id == null || id == 0)
+            {
+                return NotFound();
+            }
+            Category? category = db.Categories.Find(id);
+            if (category is null)
+                return NotFound();
+
+            return View(category);
+        }
+        [HttpPost, ActionName("Delete")]
+        public IActionResult DeletePost(int? id)
+        {
+            Category category = db.Categories.Find(id)!;
+            db.Categories.Remove(category);
+            db.SaveChanges();
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
