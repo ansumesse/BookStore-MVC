@@ -31,6 +31,7 @@ namespace Store_MVC.Controllers
             }
             if (ModelState.IsValid)
             {
+                TempData["Success"] = "Category created Successfully";
                 db.Categories.Add(category);
                 db.SaveChanges();
                 return RedirectToAction(nameof(Index));
@@ -56,7 +57,8 @@ namespace Store_MVC.Controllers
             
             if (ModelState.IsValid)
             {
-                db.Categories.Update(category);
+				TempData["Success"] = "Category Updated Successfully";
+				db.Categories.Update(category);
                 db.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
@@ -78,7 +80,8 @@ namespace Store_MVC.Controllers
         [HttpPost, ActionName("Delete")]
         public IActionResult DeletePost(int? id)
         {
-            Category category = db.Categories.Find(id)!;
+			TempData["Success"] = "Category deleted Successfully";
+			Category category = db.Categories.Find(id)!;
             db.Categories.Remove(category);
             db.SaveChanges();
             return RedirectToAction(nameof(Index));
