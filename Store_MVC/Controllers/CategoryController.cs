@@ -17,5 +17,21 @@ namespace Store_MVC.Controllers
             List<Category> categories = db.Categories.ToList();
             return View(categories);
         }
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult Create(Category category)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Categories.Add(category);
+                db.SaveChanges();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(category);
+        }
     }
 }
