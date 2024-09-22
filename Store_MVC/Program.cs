@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using Store_MVC.Data;
+
 namespace Store_MVC
 {
     public class Program
@@ -8,6 +11,9 @@ namespace Store_MVC
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
             var app = builder.Build();
 
