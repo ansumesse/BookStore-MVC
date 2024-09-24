@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Store_MVC.Data;
+using Store.DataAccess.Data;
 
 namespace Store_MVC
 {

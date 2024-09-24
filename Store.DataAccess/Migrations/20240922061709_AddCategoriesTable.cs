@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace Store_MVC.Migrations
+namespace Store.DataAccess.Migrations
 {
     /// <inheritdoc />
     public partial class AddCategoriesTable : Migration
