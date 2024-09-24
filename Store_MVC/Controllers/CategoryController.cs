@@ -1,20 +1,20 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Store.DataAccess.Data;
+using Store.DataAccess.Repository.IRepository;
 using Store.Models;
 
 namespace Store_MVC.Controllers
 {
     public class CategoryController : Controller
     {
-        private readonly ApplicationDbContext db;
+        private readonly IUnitOfWork unitOfWork;
 
-        public CategoryController(ApplicationDbContext db)
+        public CategoryController(IUnitOfWork unitOfWork)
         {
-            this.db = db;
+            this.unitOfWork = unitOfWork;
         }
         public IActionResult Index()
         {
-            List<Category> categories = db.Categories.ToList();
+            List<Category> categories = unitOfWork.Category.GetAll().ToList();
             return View(categories);
         }
         [HttpGet]
@@ -32,8 +32,8 @@ namespace Store_MVC.Controllers
             if (ModelState.IsValid)
             {
                 TempData["Success"] = "Category created Successfully";
-                db.Categories.Add(category);
-                db.SaveChanges();
+                unitOfWork.Category.Add(category);
+                unitOfWork.Save();
                 return RedirectToAction(nameof(Index));
             }
             return View(category);
@@ -45,7 +45,7 @@ namespace Store_MVC.Controllers
             {
                 return NotFound();
             }
-            Category? category = db.Categories.Find(id);
+            Category? category = unitOfWork.Category.Get(c => c.Id == id);
             if (category is null)
                 return NotFound();
          
@@ -58,8 +58,8 @@ namespace Store_MVC.Controllers
             if (ModelState.IsValid)
             {
 				TempData["Success"] = "Category Updated Successfully";
-				db.Categories.Update(category);
-                db.SaveChanges();
+				unitOfWork.Category.Update(category);
+                unitOfWork.Save();
                 return RedirectToAction(nameof(Index));
             }
             return View(category);
@@ -71,7 +71,7 @@ namespace Store_MVC.Controllers
             {
                 return NotFound();
             }
-            Category? category = db.Categories.Find(id);
+            Category? category = unitOfWork.Category.Get(c => c.Id == id);
             if (category is null)
                 return NotFound();
 
@@ -81,9 +81,9 @@ namespace Store_MVC.Controllers
         public IActionResult DeletePost(int? id)
         {
 			TempData["Success"] = "Category deleted Successfully";
-			Category category = db.Categories.Find(id)!;
-            db.Categories.Remove(category);
-            db.SaveChanges();
+			Category category = unitOfWork.Category.Get(c => c.Id == id);
+            unitOfWork.Category.Remove(category);
+            unitOfWork.Save();
             return RedirectToAction(nameof(Index));
         }
     }

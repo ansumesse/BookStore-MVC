@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Store.DataAccess.Data;
+using Store.DataAccess.Repository.IRepository;
+using Store.DataAccess.Repository;
+
 
 namespace Store_MVC
 {
@@ -14,6 +17,8 @@ namespace Store_MVC
 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
+
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             var app = builder.Build();
 
