@@ -2,7 +2,7 @@
 using Store.DataAccess.Repository.IRepository;
 using Store.Models;
 
-namespace Store_MVC.Controllers
+namespace Store_MVC.Areas.Admin.Controllers
 {
     public class CategoryController : Controller
     {
@@ -25,7 +25,7 @@ namespace Store_MVC.Controllers
         [HttpPost]
         public IActionResult Create(Category category)
         {
-            if(category.Name.ToLower() == category.DisplayOrder.ToString())
+            if (category.Name.ToLower() == category.DisplayOrder.ToString())
             {
                 ModelState.AddModelError("", "Category Name Cann't be same as Display Order");
             }
@@ -41,24 +41,24 @@ namespace Store_MVC.Controllers
         [HttpGet]
         public IActionResult Edit(int? id)
         {
-            if(id == null || id == 0)
+            if (id == null || id == 0)
             {
                 return NotFound();
             }
             Category? category = unitOfWork.Category.Get(c => c.Id == id);
             if (category is null)
                 return NotFound();
-         
+
             return View(category);
         }
         [HttpPost]
         public IActionResult Edit(Category category)
         {
-            
+
             if (ModelState.IsValid)
             {
-				TempData["Success"] = "Category Updated Successfully";
-				unitOfWork.Category.Update(category);
+                TempData["Success"] = "Category Updated Successfully";
+                unitOfWork.Category.Update(category);
                 unitOfWork.Save();
                 return RedirectToAction(nameof(Index));
             }
@@ -80,8 +80,8 @@ namespace Store_MVC.Controllers
         [HttpPost, ActionName("Delete")]
         public IActionResult DeletePost(int? id)
         {
-			TempData["Success"] = "Category deleted Successfully";
-			Category category = unitOfWork.Category.Get(c => c.Id == id);
+            TempData["Success"] = "Category deleted Successfully";
+            Category category = unitOfWork.Category.Get(c => c.Id == id);
             unitOfWork.Category.Remove(category);
             unitOfWork.Save();
             return RedirectToAction(nameof(Index));
