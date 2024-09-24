@@ -27,7 +27,35 @@ body {
     font-weight: bold;
 }
 
-    .linkedin-link:hover {
+.linkedin-link:hover {
         color: #0056b3; /* Slightly darker blue on hover */
         text-decoration: underline; /* Add underline on hover */
+}
+
+.custom-dropdown-bg {
+    background-color: rgba(255, 255, 255, 0.7); /* Semi-transparent white */
+    backdrop-filter: blur(10px); /* Optional blur effect for a glass-like look */
+}
+
+/* Make the dropdown look better */
+.dropdown-item {
+    padding: 10px 20px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+    /* Hover effects */
+    .dropdown-item:hover {
+        background-color: rgba(0, 0, 0, 0.1); /* Light hover background */
+        color: #0d6efd; /* Bootstrap primary color */
     }
+
+/* Dropdown link */
+.nav-link.dropdown-toggle {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+/* Optional: Add a shadow to the dropdown */
+.dropdown-menu {
+    border-radius: 8px; /* Rounded corners */
+}
