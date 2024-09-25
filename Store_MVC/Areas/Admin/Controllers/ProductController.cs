@@ -5,18 +5,18 @@ using Store.Models;
 namespace Store_MVC.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class CategoryController : Controller
+    public class ProductController : Controller
     {
         private readonly IUnitOfWork unitOfWork;
 
-        public CategoryController(IUnitOfWork unitOfWork)
+        public ProductController(IUnitOfWork unitOfWork)
         {
             this.unitOfWork = unitOfWork;
         }
         public IActionResult Index()
         {
-            List<Category> categories = unitOfWork.Category.GetAll().ToList();
-            return View(categories);
+            List<Product> products = unitOfWork.Product.GetAll().ToList();
+            return View(products);
         }
         [HttpGet]
         public IActionResult Create()
@@ -24,20 +24,16 @@ namespace Store_MVC.Areas.Admin.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Create(Category category)
+        public IActionResult Create(Product product)
         {
-            if (category.Name.ToLower() == category.DisplayOrder.ToString())
-            {
-                ModelState.AddModelError("", "Category Name Cann't be same as Display Order");
-            }
             if (ModelState.IsValid)
             {
-                TempData["Success"] = "Category created Successfully";
-                unitOfWork.Category.Add(category);
+                TempData["Success"] = "Product created Successfully";
+                unitOfWork.Product.Add(product);
                 unitOfWork.Save();
                 return RedirectToAction(nameof(Index));
             }
-            return View(category);
+            return View(product);
         }
         [HttpGet]
         public IActionResult Edit(int? id)
@@ -46,24 +42,24 @@ namespace Store_MVC.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            Category? category = unitOfWork.Category.Get(c => c.Id == id);
-            if (category is null)
+            Product? product = unitOfWork.Product.Get(c => c.Id == id);
+            if (product is null)
                 return NotFound();
 
-            return View(category);
+            return View(product);
         }
         [HttpPost]
-        public IActionResult Edit(Category category)
+        public IActionResult Edit(Product product)
         {
 
             if (ModelState.IsValid)
             {
-                TempData["Success"] = "Category Updated Successfully";
-                unitOfWork.Category.Update(category);
+                TempData["Success"] = "Product Updated Successfully";
+                unitOfWork.Product.Update(product);
                 unitOfWork.Save();
                 return RedirectToAction(nameof(Index));
             }
-            return View(category);
+            return View(product);
         }
         [HttpGet]
         public IActionResult Delete(int? id)
@@ -72,18 +68,18 @@ namespace Store_MVC.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            Category? category = unitOfWork.Category.Get(c => c.Id == id);
-            if (category is null)
+            Product? product = unitOfWork.Product.Get(c => c.Id == id);
+            if (product is null)
                 return NotFound();
 
-            return View(category);
+            return View(product);
         }
         [HttpPost, ActionName("Delete")]
         public IActionResult DeletePost(int? id)
         {
-            TempData["Success"] = "Category deleted Successfully";
-            Category category = unitOfWork.Category.Get(c => c.Id == id);
-            unitOfWork.Category.Remove(category);
+            TempData["Success"] = "Product deleted Successfully";
+            Product product = unitOfWork.Product.Get(c => c.Id == id);
+            unitOfWork.Product.Remove(product);
             unitOfWork.Save();
             return RedirectToAction(nameof(Index));
         }
