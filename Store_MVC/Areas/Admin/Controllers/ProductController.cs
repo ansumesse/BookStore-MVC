@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Store.DataAccess.Repository.IRepository;
 using Store.Models;
+using Store.Models.ViewModels;
 
 namespace Store_MVC.Areas.Admin.Controllers
 {
@@ -21,7 +23,11 @@ namespace Store_MVC.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            return View();
+            ProductVM productVM = new()
+            {
+                CategoryList = unitOfWork.Category.GetAll().Select(c => new SelectListItem { Text = c.Name, Value = c.Id.ToString() })
+            };
+            return View(productVM);
         }
         [HttpPost]
         public IActionResult Create(Product product)
@@ -42,11 +48,15 @@ namespace Store_MVC.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            Product? product = unitOfWork.Product.Get(c => c.Id == id);
-            if (product is null)
+            ProductVM productVM = new()
+            {
+                Product = unitOfWork.Product.Get(c => c.Id == id),
+                CategoryList = unitOfWork.Category.GetAll().Select(c => new SelectListItem { Text = c.Name, Value = c.Id.ToString() })
+            };
+            if (productVM.Product is null)
                 return NotFound();
 
-            return View(product);
+            return View(productVM);
         }
         [HttpPost]
         public IActionResult Edit(Product product)
@@ -68,11 +78,15 @@ namespace Store_MVC.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            Product? product = unitOfWork.Product.Get(c => c.Id == id);
-            if (product is null)
+            ProductVM productVM = new()
+            {
+                Product = unitOfWork.Product.Get(c => c.Id == id),
+                CategoryList = unitOfWork.Category.GetAll().Select(c => new SelectListItem { Text = c.Name, Value = c.Id.ToString() })
+            };
+            if (productVM.Product is null)
                 return NotFound();
 
-            return View(product);
+            return View(productVM);
         }
         [HttpPost, ActionName("Delete")]
         public IActionResult DeletePost(int? id)

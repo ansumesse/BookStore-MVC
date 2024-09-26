@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -43,6 +44,7 @@ namespace Store.Models
         public string Image { get; set; }
 
         [ForeignKey("Category")]
+        [DisplayName("Category")]
         public int CategoryId { get; set; }
         public Category? Category { get; set; }
     }
