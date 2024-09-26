@@ -10,10 +10,12 @@ namespace Store_MVC.Areas.Admin.Controllers
     public class ProductController : Controller
     {
         private readonly IUnitOfWork unitOfWork;
+        private readonly IWebHostEnvironment hostEnvironment;
 
-        public ProductController(IUnitOfWork unitOfWork)
+        public ProductController(IUnitOfWork unitOfWork, IWebHostEnvironment hostEnvironment)
         {
             this.unitOfWork = unitOfWork;
+            this.hostEnvironment = hostEnvironment;
         }
         public IActionResult Index()
         {
@@ -30,11 +32,24 @@ namespace Store_MVC.Areas.Admin.Controllers
             };
             return View(productVM);
         }
+
         [HttpPost]
-        public IActionResult Upsert(ProductVM productVM, IFormFile? image)
+        public IActionResult Upsert(ProductVM productVM)
         {
             if (ModelState.IsValid)
             {
+                if(productVM.Image is not null)
+                {
+                    string wwwrootPath = hostEnvironment.WebRootPath;
+                    string imageName = Guid.NewGuid() + Path.GetExtension(productVM.Image.FileName);
+                    string imagesPath = Path.Combine(wwwrootPath, @"images\product");
+                    string imagePath = Path.Combine(imagesPath, imageName);
+
+                    using var Stream = System.IO.File.Create(imagePath);
+                    productVM.Image.CopyTo(Stream);
+                    productVM.Product.ImageUrl = imagePath;
+                }
+
                 TempData["Success"] = "Product created Successfully";
                 unitOfWork.Product.Add(productVM.Product);
                 unitOfWork.Save();
@@ -44,36 +59,7 @@ namespace Store_MVC.Areas.Admin.Controllers
            
             return View(productVM);
         }
-        [HttpGet]
-        public IActionResult Edit(int? id)
-        {
-            if (id == null || id == 0)
-            {
-                return NotFound();
-            }
-            ProductVM productVM = new()
-            {
-                Product = unitOfWork.Product.Get(c => c.Id == id),
-                CategoryList = unitOfWork.Category.GetAll().Select(c => new SelectListItem { Text = c.Name, Value = c.Id.ToString() })
-            };
-            if (productVM.Product is null)
-                return NotFound();
-
-            return View(productVM);
-        }
-        [HttpPost]
-        public IActionResult Edit(Product product)
-        {
-
-            if (ModelState.IsValid)
-            {
-                TempData["Success"] = "Product Updated Successfully";
-                unitOfWork.Product.Update(product);
-                unitOfWork.Save();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(product);
-        }
+        
         [HttpGet]
         public IActionResult Delete(int? id)
         {

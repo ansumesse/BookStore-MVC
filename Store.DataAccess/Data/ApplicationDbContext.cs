@@ -31,7 +31,7 @@ namespace Store.DataAccess.Data
                     Price = 90,
                     Price50 = 85,
                     Price100 = 80,
-                    Image ="",
+                    ImageUrl ="",
                     CategoryId = 1
                 },
                 new Product
@@ -45,7 +45,7 @@ namespace Store.DataAccess.Data
                     Price = 30,
                     Price50 = 25,
                     Price100 = 20,
-                    Image = "",
+                    ImageUrl = "",
                     CategoryId = 2
 
                 },
@@ -60,7 +60,7 @@ namespace Store.DataAccess.Data
                     Price = 50,
                     Price50 = 40,
                     Price100 = 35,
-                    Image = "",
+                    ImageUrl = "",
                     CategoryId = 2
                 },
                 new Product
@@ -74,7 +74,7 @@ namespace Store.DataAccess.Data
                     Price = 65,
                     Price50 = 60,
                     Price100 = 55,
-                    Image = "",
+                    ImageUrl = "",
                     CategoryId = 2
                 },
                 new Product
@@ -88,7 +88,7 @@ namespace Store.DataAccess.Data
                     Price = 27,
                     Price50 = 25,
                     Price100 = 20,
-                    Image = "",
+                    ImageUrl = "",
                     CategoryId = 3
                 },
                 new Product
@@ -102,7 +102,7 @@ namespace Store.DataAccess.Data
                     Price = 23,
                     Price50 = 22,
                     Price100 = 20,
-                    Image = "",
+                    ImageUrl = "",
                     CategoryId = 1
                 }
                 );
