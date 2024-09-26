@@ -21,25 +21,28 @@ namespace Store_MVC.Areas.Admin.Controllers
             return View(products);
         }
         [HttpGet]
-        public IActionResult Create()
+        public IActionResult Upsert(int? id)
         {
             ProductVM productVM = new()
             {
+                Product = (id == 0 || id == null) ? new Product() : unitOfWork.Product.Get(p => p.Id == id),
                 CategoryList = unitOfWork.Category.GetAll().Select(c => new SelectListItem { Text = c.Name, Value = c.Id.ToString() })
             };
             return View(productVM);
         }
         [HttpPost]
-        public IActionResult Create(Product product)
+        public IActionResult Upsert(ProductVM productVM, IFormFile? image)
         {
             if (ModelState.IsValid)
             {
                 TempData["Success"] = "Product created Successfully";
-                unitOfWork.Product.Add(product);
+                unitOfWork.Product.Add(productVM.Product);
                 unitOfWork.Save();
                 return RedirectToAction(nameof(Index));
             }
-            return View(product);
+            productVM.CategoryList = unitOfWork.Category.GetAll().Select(c => new SelectListItem { Text = c.Name, Value = c.Id.ToString() });
+           
+            return View(productVM);
         }
         [HttpGet]
         public IActionResult Edit(int? id)
