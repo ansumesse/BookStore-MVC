@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 namespace Store.Models
 {
     public class Category
@@ -13,7 +14,7 @@ namespace Store.Models
         [Range(1, 100)]
         [DisplayName("Display Order")]
         public int DisplayOrder { get; set; }
-
+        [JsonIgnore]
         public ICollection<Product>? Products { get; set; }
     }
 }
