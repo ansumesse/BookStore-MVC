@@ -45,18 +45,32 @@ namespace Store_MVC.Areas.Admin.Controllers
                     string imagesPath = Path.Combine(wwwrootPath, @"images\product");
                     string imagePath = Path.Combine(imagesPath, imageName);
 
+                    if(!string.IsNullOrEmpty(productVM.Product.ImageUrl))
+                    {
+                        string oldImage = productVM.Product.ImageUrl;
+                        if (System.IO.File.Exists(oldImage))
+                        {
+                            System.IO.File.Delete(oldImage);
+                        }
+                    }
                     using var Stream = System.IO.File.Create(imagePath);
                     productVM.Image.CopyTo(Stream);
-                    productVM.Product.ImageUrl = imagePath;
+                    productVM.Product.ImageUrl = Path.Combine(@"\images\product", imageName);
                 }
-
-                TempData["Success"] = "Product created Successfully";
-                unitOfWork.Product.Add(productVM.Product);
+                if(productVM.Product.Id == 0)
+                {
+                    TempData["Success"] = "Product created Successfully";
+                    unitOfWork.Product.Add(productVM.Product);
+                }
+                else
+                {
+                    TempData["Update"] = "Product Updated Successfully";
+                    unitOfWork.Product.Update(productVM.Product);
+                }
                 unitOfWork.Save();
                 return RedirectToAction(nameof(Index));
             }
             productVM.CategoryList = unitOfWork.Category.GetAll().Select(c => new SelectListItem { Text = c.Name, Value = c.Id.ToString() });
-           
             return View(productVM);
         }
         
