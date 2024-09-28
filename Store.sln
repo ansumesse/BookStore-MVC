@@ -5,9 +5,11 @@ VisualStudioVersion = 17.11.35303.130
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Store_MVC", "Store_MVC\Store_MVC.csproj", "{39271554-79D2-49E5-A151-5FA17C58AA7D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Store.DataAccess", "Store.DataAccess\Store.DataAccess.csproj", "{2B2D5F0C-C3D8-4237-AF1F-510042BF4F07}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Store.DataAccess", "Store.DataAccess\Store.DataAccess.csproj", "{2B2D5F0C-C3D8-4237-AF1F-510042BF4F07}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Store.Models", "Store.Models\Store.Models.csproj", "{6E14BE6C-CED0-407F-B246-369703B838C0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Store.Models", "Store.Models\Store.Models.csproj", "{6E14BE6C-CED0-407F-B246-369703B838C0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Store.Utility", "Store.Utility\Store.Utility.csproj", "{ABE5604E-E913-49FE-B77C-D5D6A91E4A25}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{6E14BE6C-CED0-407F-B246-369703B838C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E14BE6C-CED0-407F-B246-369703B838C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E14BE6C-CED0-407F-B246-369703B838C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABE5604E-E913-49FE-B77C-D5D6A91E4A25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABE5604E-E913-49FE-B77C-D5D6A91E4A25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABE5604E-E913-49FE-B77C-D5D6A91E4A25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABE5604E-E913-49FE-B77C-D5D6A91E4A25}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
