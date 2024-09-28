@@ -23,6 +23,12 @@ namespace Store_MVC.Areas.Customer.Controllers
             return View(productList);
         }
 
+        public IActionResult Details(int id)
+        {
+            Product product = unitOfWork.Product.Get(p => p.Id == id, includeProperties: "Category");
+            return View(product);
+        }
+
         public IActionResult Privacy()
         {
             return View();

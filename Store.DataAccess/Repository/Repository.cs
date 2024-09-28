@@ -34,7 +34,7 @@ namespace Store.DataAccess.Repository
             {
                 foreach (var property in includeProperties.Split(", ", StringSplitOptions.RemoveEmptyEntries))
                 {
-                    query.Include(property);
+                    query = query.Include(property);
                 }
             }
 
