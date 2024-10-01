@@ -1,0 +1,66 @@
+﻿@model IEnumerable<Company>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<partial name="_NotificationPartialView" />
+<div class="container">
+    <div class="row pt-4 pb-3">
+        <div class="col-6">
+            <h2 class="text-primary">
+                Company List
+            </h2>
+        </div>
+        <div class="col-6 text-end">
+            <a asp-controller="Company" asp-action="Upsert" class="btn btn-secondary">
+                <i class="bi bi-plus-circle-dotted"></i>  Create New Company
+            </a>
+        </div>
+    </div>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Address</th>
+                <th>City</th>
+                <th>State</th>
+                <th>Phone Number</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var Company in Model)
+            {
+                <tr>
+                    <td>
+                        @Company.Name
+                    </td>
+                    <td>
+                        @Company.StreetAddress
+                    </td>
+                     <td>
+                        @Company.City
+                    </td>
+                     <td>
+                        @Company.State
+                    </td>
+                     <td>
+                        @Company.PhoneNumber
+                    </td>
+
+                    <td>
+                        <a asp-controller="Company" asp-action="Upsert" asp-route-id="@Company.Id" class="btn btn-info mx-2">
+                            <i class="bi bi-pencil-square"></i> Edit
+                        </a>
+                    </td>
+                    <td>
+                        <a asp-controller="Company" asp-action="Delete" asp-route-id="@Company.Id" class="btn btn-danger mx-2">
+                            <i class="bi bi-trash-fill"></i> Delete
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+

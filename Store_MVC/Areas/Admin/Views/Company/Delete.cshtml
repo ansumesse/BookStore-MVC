@@ -1,0 +1,61 @@
+﻿@model Company
+@{
+    ViewData["Title"] = "Delete";
+}
+
+
+<form method="post" class="row" >
+    <input asp-for="Id" hidden />
+    <div class="row">
+        <div class="col-12">
+            <div class="border p-3">
+                @*<div asp-validation-summary="ModelOnly"></div>*@
+                <div class="form-floating py-2 col-12">
+                    <input asp-for="Name" disabled class="form-control border-0 shadow" />
+                    <label asp-for="Name" class="ms-2"></label>
+                </div>
+
+                <div class="form-floating py-2 col-12">
+                    <input asp-for="PhoneNumber" disabled class="form-control border-0 shadow" />
+                    <label asp-for="PhoneNumber" class="ms-2"></label>
+                </div>
+                <div class="form-floating py-2 col-12">
+                    <input asp-for="StreetAddress" disabled class="form-control border-0 shadow" />
+                    <label asp-for="StreetAddress" class="ms-2"></label>
+                </div>
+                <div class="form-floating py-2 col-12">
+                    <input asp-for="City" disabled class="form-control border-0 shadow" />
+                    <label asp-for="City" class="ms-2"></label>
+                </div>
+                <div class="form-floating py-2 col-12">
+                    <input asp-for="State" disabled class="form-control border-0 shadow" />
+                    <label asp-for="State" class="ms-2"></label>
+                </div>
+
+                <div class="form-floating py-2 col-12">
+                    <input asp-for="PostalCode" disabled class="form-control border-0 shadow" />
+                    <label asp-for="PostalCode" class="ms-2"></label>
+                </div>
+
+
+                <div class="row pt-2">
+                    <div class="col-6 col-md-3">
+                        <button type="submit" class="btn btn-danger form-control">Delete</button>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <a asp-controller="Company" asp-action="Index" class="btn btn-outline-primary border  form-control">
+                            Back to List
+                        </a>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+
+</form>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
