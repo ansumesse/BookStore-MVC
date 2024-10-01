@@ -49,6 +49,11 @@
                         </select>
                     </div>
                     <div class="form-floating mb-3 col-md-6">
+                        <select asp-for="Input.CompanyId" asp-items="@Model.Input.CompanyList" class="form-select">
+                            <option disabled selected>-Select Company-</option>
+                        </select>
+                    </div>
+                    <div class="form-floating mb-3 col-md-6">
                         <input asp-for="Input.StreetAddress" class="form-control" placeholder="name@example.com" />
                         <label asp-for="Input.StreetAddress" class="ms-2 text-muted">Street Address</label>
                         <span asp-validation-for="Input.StreetAddress" class="text-danger"></span>

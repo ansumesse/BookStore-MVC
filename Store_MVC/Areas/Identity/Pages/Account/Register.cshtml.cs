@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using Store.DataAccess.Repository.IRepository;
 using Store.Models;
 using Store.Utility;
 
@@ -34,6 +35,7 @@ namespace Store_MVC.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<IdentityUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly IUnitOfWork unitOfWork;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
@@ -41,7 +43,8 @@ namespace Store_MVC.Areas.Identity.Pages.Account
             IUserStore<IdentityUser> userStore,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IUnitOfWork _unitOfWork)
         {
             _userManager = userManager;
             this.roleManager = roleManager;
@@ -50,6 +53,7 @@ namespace Store_MVC.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            unitOfWork = _unitOfWork;
         }
 
         /// <summary>
@@ -113,6 +117,8 @@ namespace Store_MVC.Areas.Identity.Pages.Account
             public string? PhoneNumber { get; set; }
             public string? Role { get; set; }
             public IEnumerable<SelectListItem>? RoleList { get; set; }
+            public int? CompanyId { get; set; }
+            public IEnumerable<SelectListItem>? CompanyList { get; set; }
         }
 
 
@@ -132,6 +138,11 @@ namespace Store_MVC.Areas.Identity.Pages.Account
                 {
                     Text = i,
                     Value = i
+                }),
+                CompanyList = unitOfWork.Company.GetAll().Select(c => new SelectListItem
+                {
+                    Text = c.Name,
+                    Value = c.Id.ToString()
                 })
             };
 
