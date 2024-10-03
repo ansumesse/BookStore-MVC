@@ -48,11 +48,13 @@ namespace Store.DataAccess.Repository
 
             return query.FirstOrDefault();
         }
-        public IEnumerable<T> GetAll(string? includeProperties = null) // [Category, ]
+        public IEnumerable<T> GetAll(Expression<Func<T, bool>>? filter, string? includeProperties = null) // [Category, ]
         {
             IQueryable<T> query = dbSet;
+            if(filter is not null)
+                query = query.Where(filter); 
 
-            if(includeProperties is not null)
+            if (includeProperties is not null)
             {
                 foreach(var property in includeProperties.Split(", ", StringSplitOptions.RemoveEmptyEntries))
                 {
