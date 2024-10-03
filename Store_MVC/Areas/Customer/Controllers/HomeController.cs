@@ -60,6 +60,7 @@ namespace Store_MVC.Areas.Customer.Controllers
                 unitOfWork.ShoppingCart.Add(cart);
             }
             unitOfWork.Save();
+            TempData["Success"] = "Cart updated successfully";
             return RedirectToAction(nameof(Index));
         }
 
