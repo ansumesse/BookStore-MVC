@@ -20,5 +20,7 @@ namespace Store.Models
         public string ApplicationUserId { get; set; }
         public Product? Product { get; set; }
         public ApplicationUser? ApplicationUser { get; set; }
+        [NotMapped]
+        public double Price { get; set; }
     }
 }
