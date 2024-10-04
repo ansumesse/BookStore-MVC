@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Store.DataAccess.Repository.IRepository;
 using Store.Models;
 using Store.Models.ViewModels;
+using Store.Utility;
 using System.Security.Claims;
 
 namespace Store_MVC.Areas.Customer.Controllers
@@ -12,7 +13,7 @@ namespace Store_MVC.Areas.Customer.Controllers
     public class CartController : Controller
     {
         private readonly IUnitOfWork unitOfWork;
-
+        [BindProperty]
         public ShoppingCartVM ShoppingCartVM { get; set; }
         public CartController(IUnitOfWork unitOfWork)
         {
@@ -88,7 +89,65 @@ namespace Store_MVC.Areas.Customer.Controllers
 
             return View(ShoppingCartVM);
         }
-        private double GetPriceBasedOnQuantity(ShoppingCart cart)
+        [HttpPost, ActionName("Summary")]
+		public IActionResult SummaryPost()
+		{
+			var claimsIdentity = (ClaimsIdentity)User.Identity;
+			var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+			ShoppingCartVM.ShoppingCartList = unitOfWork.ShoppingCart.GetAll(s => s.ApplicationUserId == userId, "Product");
+            ShoppingCartVM.OrderHeader.OrderDate = DateTime.Now;
+            ShoppingCartVM.OrderHeader.ApplicationUserId = userId;
+
+
+            // in EF When Adding Class to db and use navigation prop before it it also add the navigation prop
+            // so make sure to intialize new instance for the navigation prop that i want
+            ApplicationUser applicationUser = unitOfWork.ApplicationUser.Get(u => u.Id == userId);
+            //ShoppingCartVM.OrderHeader.ApplicationUser = unitOfWork.ApplicationUser.Get(u => u.Id == userId); 
+
+            foreach (var cart in ShoppingCartVM.ShoppingCartList)
+			{
+				cart.Price = GetPriceBasedOnQuantity(cart);
+				ShoppingCartVM.OrderHeader.OrderTotal += (cart.Price * cart.Count);
+			}
+			
+            if(applicationUser.CompanyId.GetValueOrDefault() == 0)
+            {
+                // The User is a regular Customer
+                ShoppingCartVM.OrderHeader.OrderStatus = SD.StatusPending;
+                ShoppingCartVM.OrderHeader.PaymentStatus = SD.PaymentStatusPending;
+            }
+            else
+            {
+                // The user is Company Customer
+                ShoppingCartVM.OrderHeader.OrderStatus = SD.StatusApproved;
+                ShoppingCartVM.OrderHeader.PaymentStatus = SD.PaymentStatusDelayedPayment;
+
+			}
+
+            unitOfWork.OrderHeader.Add(ShoppingCartVM.OrderHeader);
+            unitOfWork.Save();
+
+            foreach (var cart in ShoppingCartVM.ShoppingCartList)
+            {
+                OrderDetail orderDetail = new()
+                {
+                    OrderHeaderId = ShoppingCartVM.OrderHeader.Id,
+                    Count = cart.Count,
+                    Price = cart.Price,
+                    ProductId = cart.ProductId
+                };
+                unitOfWork.OrderDetail.Add(orderDetail);
+                unitOfWork.Save();
+            }
+
+            return RedirectToAction(nameof(OrderConfirmation), new { id = ShoppingCartVM.OrderHeader.Id });
+		}
+        public IActionResult OrderConfirmation(int id)
+        {
+            return View(id);
+        }
+		private double GetPriceBasedOnQuantity(ShoppingCart cart)
         {
             if (cart.Count <= 50)
                 return cart.Product.Price;
