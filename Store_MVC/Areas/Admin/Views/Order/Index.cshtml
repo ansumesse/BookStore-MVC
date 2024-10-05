@@ -1,0 +1,72 @@
+﻿@model List<OrderHeader>
+@{
+    ViewData["Title"] = "Index";
+}
+<partial name="_NotificationPartialView" />
+<div class="container">
+    <div class="row pt-4 pb-3">
+        <div class="col-6">
+            <h2 class="text-primary">
+                Product List
+            </h2>
+        </div>
+    </div>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>
+                    Id
+                </th>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Phone Number
+                </th>
+                <th>
+                    Email
+                </th>
+                <th>
+                    Status
+                </th>
+                <th>
+                    Total
+                </th>
+
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in Model)
+            {
+                <tr>
+                    <td>
+                        @order.Id
+                    </td>
+                    <td>
+                        @order.Name
+                    </td>
+                    <td>
+                        @order.PhoneNumber
+                    </td>
+                    <td>
+                        @order.ApplicationUser.Email
+                    </td>
+                    <td>
+                        @order.State
+                    </td>
+                    <td>
+                        @order.OrderTotal
+                    </td>
+
+
+                    <td>
+                        <a asp-controller="Order" asp-action="Upsert" asp-route-id="@order.Id" class="btn btn-info mx-2">
+                            <i class="bi bi-pencil-square"></i> Edit
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
