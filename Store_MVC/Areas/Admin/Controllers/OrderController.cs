@@ -7,6 +7,7 @@ using Store.Models;
 using Store.Models.ViewModels;
 using Store.Utility;
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace Store_MVC.Areas.Admin.Controllers
 {
@@ -22,9 +23,20 @@ namespace Store_MVC.Areas.Admin.Controllers
         }
         public IActionResult Index(string status)
         {
-            IEnumerable<OrderHeader> orders = unitOfWork.OrderHeader.GetAll(includeProperties: "ApplicationUser");
+            IEnumerable<OrderHeader> orders;
 
-            switch (status)
+			if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
+            {
+				orders = unitOfWork.OrderHeader.GetAll(includeProperties: "ApplicationUser");
+            }
+            else
+            {
+                var claimsIdentity = (ClaimsIdentity)User.Identity;
+                var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+				orders = unitOfWork.OrderHeader.GetAll(o => o.ApplicationUserId == userId, includeProperties: "ApplicationUser");
+			}
+
+			switch (status)
             {
                 case "pending":
                     orders = orders.Where(o => o.PaymentStatus == SD.PaymentStatusDelayedPayment);
