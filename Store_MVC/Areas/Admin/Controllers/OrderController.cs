@@ -2,6 +2,7 @@
 using Store.DataAccess.Repository;
 using Store.DataAccess.Repository.IRepository;
 using Store.Models;
+using Store.Models.ViewModels;
 using Store.Utility;
 using System.Diagnostics;
 
@@ -39,6 +40,15 @@ namespace Store_MVC.Areas.Admin.Controllers
             }
 
             return View(orders);
+        }
+        public IActionResult Details(int orderId)
+        {
+            OrderVM orderVM = new()
+            {
+                OrderHeader = unitOfWork.OrderHeader.Get(o => o.Id == orderId, includeProperties: "ApplicationUser"),
+                OrderDetails = unitOfWork.OrderDetail.GetAll(o => o.OrderHeaderId == orderId, includeProperties: "Product")
+            };
+            return View(orderVM);
         }
     }
 }
