@@ -25,6 +25,9 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
+                        <li>
+                            <a class="dropdown-item text-dark" asp-area="Admin" asp-controller="Order" asp-action="Index">Mange Order</a>
+                        </li>
                         @if (User.IsInRole(SD.Role_Admin))
                         {
                             <li class="nav-item dropdown">
@@ -41,9 +44,7 @@
                                     <li>
                                         <a class="dropdown-item text-dark" asp-area="Admin" asp-controller="Company" asp-action="Index">Company</a>
                                     </li>
-                                    <li>
-                                        <a class="dropdown-item text-dark" asp-area="Admin" asp-controller="Order" asp-action="Index">Order</a>
-                                    </li>
+                                    
                                 </ul>
                             </li>
 

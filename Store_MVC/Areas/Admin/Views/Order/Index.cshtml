@@ -1,6 +1,32 @@
-﻿@model List<OrderHeader>
+﻿@model IEnumerable<OrderHeader>
 @{
     ViewData["Title"] = "Index";
+
+    var status = Context.Request.Query["status"];
+    var pending = "text-primary";
+    var inprocess = "text-primary";
+    var completed = "text-primary";
+    var approved = "text-primary";
+    var all = "text-primary";
+
+    switch (status)
+    {
+        case "pending":
+            pending = "active text-white bg-secondary";
+            break;
+        case "inprocess":
+            inprocess = "active text-white bg-secondary";
+            break;
+        case "completed":
+            completed = "active text-white bg-secondary";
+            break;
+        case "approved":
+            approved = "active text-white bg-secondary";
+            break;
+        default:
+            all = "active text-white bg-secondary";
+            break;
+    }
 }
 <partial name="_NotificationPartialView" />
 <div class="container">
@@ -9,6 +35,28 @@
             <h2 class="text-primary">
                 Product List
             </h2>
+        </div>
+        <div class="col-6 text-end">
+            <div class="d-flex justify-content-between pb-5 pt-2">
+                <span></span>
+                <ul class="list-group list-group-horizontal-sm">
+                    <a style="text-decoration:none;" asp-controller="Order" asp-action="Index" asp-route-status="inprocess">
+                    <li class="list-group-item @inprocess">In Process</li>
+                    </a>
+                    <a style="text-decoration:none;" asp-controller="Order" asp-action="Index" asp-route-status="pending">
+                    <li class="list-group-item @pending">Payment Pending</li>
+                    </a>
+                    <a style="text-decoration:none;" asp-controller="Order" asp-action="Index" asp-route-status="completed">
+                    <li class="list-group-item @completed">Completed</li>
+                    </a>
+                    <a style="text-decoration:none;" asp-controller="Order" asp-action="Index" asp-route-status="approved">
+                    <li class="list-group-item @approved">Approved</li>
+                    </a>
+                    <a style="text-decoration:none;" asp-controller="Order" asp-action="Index" asp-route-status="all">
+                    <li class="list-group-item @all">All</li>
+                    </a>
+                </ul>
+            </div>
         </div>
     </div>
     <table class="table table-bordered table-striped">
@@ -53,7 +101,7 @@
                         @order.ApplicationUser.Email
                     </td>
                     <td>
-                        @order.State
+                        @order.OrderStatus
                     </td>
                     <td>
                         @order.OrderTotal
@@ -61,8 +109,8 @@
 
 
                     <td>
-                        <a asp-controller="Order" asp-action="Upsert" asp-route-id="@order.Id" class="btn btn-info mx-2">
-                            <i class="bi bi-pencil-square"></i> Edit
+                        <a asp-controller="Order" asp-action="Details" asp-route-orderId="@order.Id" class="btn btn-info mx-2">
+                            <i class="bi bi-pencil-square"></i>
                         </a>
                     </td>
                 </tr>
