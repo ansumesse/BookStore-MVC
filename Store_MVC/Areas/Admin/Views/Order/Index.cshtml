@@ -1,4 +1,4 @@
-﻿@model List<OrderHeader>
+﻿@model IEnumerable<OrderHeader>
 @{
     ViewData["Title"] = "Index";
 
@@ -101,7 +101,7 @@
                         @order.ApplicationUser.Email
                     </td>
                     <td>
-                        @order.State
+                        @order.OrderStatus
                     </td>
                     <td>
                         @order.OrderTotal

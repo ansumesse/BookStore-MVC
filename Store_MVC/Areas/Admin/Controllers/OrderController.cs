@@ -2,6 +2,8 @@
 using Store.DataAccess.Repository;
 using Store.DataAccess.Repository.IRepository;
 using Store.Models;
+using Store.Utility;
+using System.Diagnostics;
 
 namespace Store_MVC.Areas.Admin.Controllers
 {
@@ -14,9 +16,28 @@ namespace Store_MVC.Areas.Admin.Controllers
         {
             this.unitOfWork = unitOfWork;
         }
-        public IActionResult Index()
+        public IActionResult Index(string status)
         {
-            List<OrderHeader> orders = unitOfWork.OrderHeader.GetAll(includeProperties: "ApplicationUser").ToList();
+            IEnumerable<OrderHeader> orders = unitOfWork.OrderHeader.GetAll(includeProperties: "ApplicationUser");
+
+            switch (status)
+            {
+                case "pending":
+                    orders = orders.Where(o => o.PaymentStatus == SD.PaymentStatusDelayedPayment);
+                    break;
+                case "inprocess":
+                    orders = orders.Where(o => o.OrderStatus == SD.StatusInProcess);
+                    break;
+                case "completed":
+                    orders = orders.Where(o => o.OrderStatus == SD.StatusShipped);
+                    break;
+                case "approved":
+                    orders = orders.Where(o => o.OrderStatus == SD.StatusApproved);
+                    break;
+                default:
+                    break;
+            }
+
             return View(orders);
         }
     }
