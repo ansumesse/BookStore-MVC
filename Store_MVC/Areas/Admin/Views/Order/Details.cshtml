@@ -1,5 +1,7 @@
 ﻿@model OrderVM
 
+<partial name="_NotificationPartialView" />
+
 <form method="post">
 	<br />
 	<input type="hidden"asp-for="OrderHeader.Id" />
@@ -129,7 +131,7 @@
 								<div class="col-9">
 									@if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
 									{
-										<input asp-for="@Model.OrderHeader.Carrier" class="form-control" />
+										<input asp-for="@Model.OrderHeader.Carrier" id="carrier" class="form-control" />
 
 									}
 									else
@@ -143,7 +145,7 @@
 								<div class="col-9">
 									@if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
 									{
-										<input asp-for="@Model.OrderHeader.TrackingNumber" class="form-control" />
+										<input asp-for="@Model.OrderHeader.TrackingNumber" id="trackingNumber" class="form-control" />
 
 									}
 									else
@@ -167,7 +169,7 @@
 									<div class="col-3">Session ID</div>
 									<div class="col-9">
 
-										@*  <input asp-for="OrderHeader.SessionId" readonly type="text" class="form-control" /> *@
+										 <input asp-for="OrderHeader.SessionId" readonly type="text" class="form-control" />
 
 									</div>
 								</div>
@@ -182,7 +184,7 @@
 							}
 							<div class="row my-1">
 
-								@*  @if (Model.OrderHeader.SessionId == null)
+								 @if (Model.OrderHeader.SessionId == null)
 								{
 								<div class="col-3">Payment Due Date</div>
 								<div class="col-9">
@@ -196,7 +198,7 @@
 								<div class="col-9">
 								<input value="@Model.OrderHeader.PaymentDate.ToShortDateString()" readonly type="text" class="form-control" />
 								</div>
-								} *@
+								}
 
 							</div>
 
@@ -262,11 +264,11 @@
 							{
 								@if (Model.OrderHeader.OrderStatus == SD.StatusApproved)
 								{
-									<button type="submit" class="btn btn-primary form-control my-1">Start Processing</button>
+									<button asp-action="StartProcessing" type="submit" class="btn btn-primary form-control my-1">Start Processing</button>
 								}
 								@if (Model.OrderHeader.OrderStatus == SD.StatusInProcess)
 								{
-									<button type="submit" class="btn btn-primary form-control my-1">Ship Order</button>
+									<button type="submit" asp-action="ShipOrder" onclick="return validateInput()" class="btn btn-primary form-control my-1">Ship Order</button>
 								}
 
 								@if (Model.OrderHeader.OrderStatus != SD.StatusRefunded &&
@@ -283,3 +285,30 @@
 		</div>
 	</div>
 </form>
+
+@section Scripts {
+
+	<partial name="_ValidationScriptsPartial" />
+	<script>
+		function validateInput() {
+			if (document.getElementById("trackingNumber").value == "") {
+				Swal.fire({
+					icon: 'error',
+					title: 'Oops...',
+					text: 'Please enter tracking number!',
+				});
+				return false;
+			}
+			if (document.getElementById("carrier").value == "") {
+				Swal.fire({
+					icon: 'error',
+					title: 'Oops...',
+					text: 'Please enter carrier!',
+				});
+				return false;
+			}
+			return true;
+		}
+	</script>
+
+}

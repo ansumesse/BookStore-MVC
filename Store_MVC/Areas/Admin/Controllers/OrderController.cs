@@ -12,6 +12,7 @@ using System.Security.Claims;
 namespace Store_MVC.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize]
     public class OrderController : Controller
     {
         private readonly IUnitOfWork unitOfWork;
@@ -39,7 +40,7 @@ namespace Store_MVC.Areas.Admin.Controllers
 			switch (status)
             {
                 case "pending":
-                    orders = orders.Where(o => o.PaymentStatus == SD.PaymentStatusDelayedPayment);
+                    orders = orders.Where(o => o.PaymentStatus == SD.PaymentStatusPending || o.PaymentStatus == SD.PaymentStatusDelayedPayment);
                     break;
                 case "inprocess":
                     orders = orders.Where(o => o.OrderStatus == SD.StatusInProcess);
@@ -84,7 +85,7 @@ namespace Store_MVC.Areas.Admin.Controllers
 				orderHeaderFromDb.TrackingNumber = OrderVM.OrderHeader.TrackingNumber;
 			}
 		
-		unitOfWork.OrderHeader.Update(orderHeaderFromDb);
+		    unitOfWork.OrderHeader.Update(orderHeaderFromDb);
             unitOfWork.Save();
 
             TempData["Success"] = "Order Details Updated Successfully.";
@@ -97,5 +98,39 @@ namespace Store_MVC.Areas.Admin.Controllers
         
         }
 
+		[HttpPost, Authorize(Roles = SD.Role_Admin + "," + SD.Role_Employee)]
+		public IActionResult StartProcessing()
+        {
+            unitOfWork.OrderHeader.UpdateStatus(OrderVM.OrderHeader.Id, SD.StatusInProcess);
+            unitOfWork.Save();
+			TempData["Success"] = "Order Details Updated Successfully.";
+
+
+			return RedirectToAction(nameof(Details), new
+			{
+				orderId = OrderVM.OrderHeader.Id
+			});
+		}
+
+		[HttpPost, Authorize(Roles = SD.Role_Admin + "," + SD.Role_Employee)]
+		public IActionResult ShipOrder()
+		{
+            OrderHeader orderHeader = unitOfWork.OrderHeader.Get(o => o.Id == OrderVM.OrderHeader.Id, tracked:true);
+            orderHeader.Carrier = OrderVM.OrderHeader.Carrier;
+            orderHeader.TrackingNumber = OrderVM.OrderHeader.TrackingNumber;
+            orderHeader.ShippingDate = DateTime.Now;
+            if (orderHeader.PaymentStatus == SD.PaymentStatusDelayedPayment)
+                orderHeader.PaymentDueDate = DateOnly.FromDateTime(DateTime.Now.AddDays(30));
+			unitOfWork.Save();
+			unitOfWork.OrderHeader.UpdateStatus(OrderVM.OrderHeader.Id, SD.StatusShipped);
+			unitOfWork.Save();
+			TempData["Success"] = "Order Shipped Successfully.";
+
+
+			return RedirectToAction(nameof(Details), new
+			{
+				orderId = OrderVM.OrderHeader.Id
+			});
+		}
 	}
 }
