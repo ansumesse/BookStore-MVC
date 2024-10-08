@@ -6,6 +6,7 @@ using Store.DataAccess.Repository.IRepository;
 using Store.Models;
 using Store.Models.ViewModels;
 using Store.Utility;
+using Stripe;
 using System.Diagnostics;
 using System.Security.Claims;
 
@@ -125,6 +126,36 @@ namespace Store_MVC.Areas.Admin.Controllers
 			unitOfWork.OrderHeader.UpdateStatus(OrderVM.OrderHeader.Id, SD.StatusShipped);
 			unitOfWork.Save();
 			TempData["Success"] = "Order Shipped Successfully.";
+
+
+			return RedirectToAction(nameof(Details), new
+			{
+				orderId = OrderVM.OrderHeader.Id
+			});
+		}
+
+		[HttpPost, Authorize(Roles = SD.Role_Admin + "," + SD.Role_Employee)]
+		public IActionResult CancelOrder()
+        {
+            OrderHeader orderHeader = unitOfWork.OrderHeader.Get(o => o.Id == OrderVM.OrderHeader.Id);
+            if(orderHeader.PaymentStatus == SD.PaymentStatusApproved)
+            {
+                var options = new RefundCreateOptions()
+                {
+                    Reason = RefundReasons.RequestedByCustomer,
+                    PaymentIntent = orderHeader.PaymentIntentId
+                };
+
+                RefundService service = new RefundService();
+                Refund refund = service.Create(options);
+                unitOfWork.OrderHeader.UpdateStatus(orderHeader.Id, SD.StatusCancelled, SD.StatusRefunded);
+            }
+            else
+            {
+				unitOfWork.OrderHeader.UpdateStatus(orderHeader.Id, SD.StatusCancelled, SD.StatusCancelled);
+			}
+			unitOfWork.Save();
+			TempData["Success"] = "Order Canceled Successfully.";
 
 
 			return RedirectToAction(nameof(Details), new
