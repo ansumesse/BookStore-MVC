@@ -7,6 +7,7 @@ using Store.Models;
 using Store.Models.ViewModels;
 using Store.Utility;
 using Stripe;
+using Stripe.Checkout;
 using System.Diagnostics;
 using System.Security.Claims;
 
@@ -162,6 +163,67 @@ namespace Store_MVC.Areas.Admin.Controllers
 			{
 				orderId = OrderVM.OrderHeader.Id
 			});
+		}
+
+		[HttpPost, Authorize(Roles = SD.Role_Admin + "," + SD.Role_Employee)]
+        [ActionName("Details")]
+		public IActionResult DetailsPayNow()
+        {
+            OrderVM.OrderHeader = unitOfWork.OrderHeader.Get(o => o.Id == OrderVM.OrderHeader.Id);
+            OrderVM.OrderDetails = unitOfWork.OrderDetail.GetAll(o => o.OrderHeaderId == OrderVM.OrderHeader.Id, includeProperties: "Product");
+
+            // stripe logic
+            var domain = "http://localhost:40220/";
+			var options = new SessionCreateOptions
+			{
+				SuccessUrl = domain + $"admin/order/orderConfirmation?orderHeaderId={OrderVM.OrderHeader.Id}",
+                CancelUrl = domain + $"admin/order/Details?orderId={OrderVM.OrderHeader.Id}",
+				LineItems = new List<SessionLineItemOptions>(),
+				Mode = "payment",
+			};
+            foreach (var item in OrderVM.OrderDetails)
+            {
+                var sessionLineItemOption = new SessionLineItemOptions()
+                {
+                    PriceData = new SessionLineItemPriceDataOptions()
+                    {
+                        Currency = "usd",
+                        ProductData = new SessionLineItemPriceDataProductDataOptions()
+                        {
+                            Name = item.Product.Title
+                        },
+                        UnitAmount = (long)item.Price * 100
+                    },
+                    Quantity = item.Count
+                };
+                options.LineItems.Add(sessionLineItemOption);
+			}
+
+			var service = new SessionService();
+			Session session = service.Create(options);
+            unitOfWork.OrderHeader.UpdateStripePaymentID(OrderVM.OrderHeader.Id, session.Id, session.PaymentIntentId);
+            unitOfWork.Save();
+            Response.Headers.Add("Location", session.Url);
+            return new StatusCodeResult(303);
+
+		}
+
+		public IActionResult orderConfirmation(int orderHeaderId)
+        {
+			OrderHeader orderHeader = unitOfWork.OrderHeader.Get(o => o.Id == orderHeaderId);
+			if (orderHeader.PaymentStatus == SD.PaymentStatusDelayedPayment)
+			{
+				// order by Comapny
+				SessionService service = new SessionService();
+				Session session = service.Get(orderHeader.SessionId);
+				if (session.PaymentStatus == "paid")
+				{
+					unitOfWork.OrderHeader.UpdateStripePaymentID(orderHeaderId, session.Id, session.PaymentIntentId);
+					unitOfWork.OrderHeader.UpdateStatus(orderHeaderId, orderHeader.OrderStatus, SD.PaymentStatusApproved);
+					unitOfWork.Save();
+				}
+			}
+			return View(orderHeaderId);
 		}
 	}
 }
