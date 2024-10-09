@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Store.DataAccess.Repository.IRepository;
 using Store.Models;
+using Store.Utility;
 using System.Diagnostics;
 using System.Security.Claims;
 
@@ -53,13 +54,16 @@ namespace Store_MVC.Areas.Customer.Controllers
                 // Update
                 cartFromDb.Count += cart.Count;
                 unitOfWork.ShoppingCart.Update(cartFromDb);
+                unitOfWork.Save();
             }
             else
             {
                 // Add
                 unitOfWork.ShoppingCart.Add(cart);
+                unitOfWork.Save();
+                HttpContext.Session.SetInt32(SD.SessionCart,
+                    unitOfWork.ShoppingCart.GetAll(s => s.ApplicationUserId == cart.ApplicationUserId).Count());
             }
-            unitOfWork.Save();
             TempData["Success"] = "Cart updated successfully";
             return RedirectToAction(nameof(Index));
         }
