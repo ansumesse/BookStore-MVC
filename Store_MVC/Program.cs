@@ -39,6 +39,11 @@ namespace Store_MVC
                 options.Cookie.IsEssential = true;
             });
 
+            builder.Services.AddAuthentication().AddFacebook(option =>
+            {
+                option.AppId = "1058738222397817";
+                option.AppSecret = "5c0a328dafcb45bb2b886afde5d8a329";
+            });
 
             builder.Services.AddRazorPages();
             builder.Services.AddScoped<IEmailSender, EmailSender>();
