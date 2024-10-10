@@ -49,8 +49,12 @@ namespace Store_MVC.Areas.Customer.Controllers
 		{
 			var cartFromDb = unitOfWork.ShoppingCart.Get(s => s.Id == cartId);
 			if (cartFromDb.Count == 1)
-				unitOfWork.ShoppingCart.Remove(cartFromDb);
-			else
+			{
+                unitOfWork.ShoppingCart.Remove(cartFromDb);
+                HttpContext.Session.SetInt32(SD.SessionCart,
+                  unitOfWork.ShoppingCart.GetAll(s => s.ApplicationUserId == cartFromDb.ApplicationUserId).Count() - 1);
+            }
+            else
 			{
 				cartFromDb.Count--;
 				unitOfWork.ShoppingCart.Update(cartFromDb);
@@ -62,7 +66,9 @@ namespace Store_MVC.Areas.Customer.Controllers
 		{
 			var cartFromDb = unitOfWork.ShoppingCart.Get(s => s.Id == cartId);
 			unitOfWork.ShoppingCart.Remove(cartFromDb);
-			unitOfWork.Save();
+            HttpContext.Session.SetInt32(SD.SessionCart,
+                   unitOfWork.ShoppingCart.GetAll(s => s.ApplicationUserId == cartFromDb.ApplicationUserId).Count() - 1);
+            unitOfWork.Save();
 			return RedirectToAction(nameof(Index));
 		}
 		public IActionResult Summary()
