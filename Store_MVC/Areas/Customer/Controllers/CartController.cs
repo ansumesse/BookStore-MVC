@@ -205,6 +205,7 @@ namespace Store_MVC.Areas.Customer.Controllers
 				unitOfWork.ShoppingCart.RemoveRange(shoppingcart);
 				unitOfWork.Save();
 			}
+			HttpContext.Session.Clear();
 			return View(id);
 		}
 		private double GetPriceBasedOnQuantity(ShoppingCart cart)
