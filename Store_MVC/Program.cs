@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Store.Utility;
 using Stripe;
+using Store.DataAccess.DBInitializer;
 
 
 namespace Store_MVC
@@ -48,7 +49,7 @@ namespace Store_MVC
             builder.Services.AddRazorPages();
             builder.Services.AddScoped<IEmailSender, EmailSender>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-
+            builder.Services.AddScoped<IDbInitalizer, DbInitializer>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -66,13 +67,21 @@ namespace Store_MVC
             app.UseAuthorization();
 
             app.UseSession();
-
+            SeedDatabase();
             app.MapRazorPages();
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}");
 
             app.Run();
-        }
+
+			void SeedDatabase()
+			{
+                using var scope = app.Services.CreateScope();
+                var dbInitilizer = scope.ServiceProvider.GetRequiredService<IDbInitalizer>();
+                dbInitilizer.Initialize();
+
+		    }
+		}
     }
 }
