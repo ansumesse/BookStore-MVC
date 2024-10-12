@@ -15,11 +15,11 @@ namespace Store.DataAccess.DBInitializer
 	{
 		private readonly ApplicationDbContext db;
 		private readonly RoleManager<IdentityRole> roleManager;
-		private readonly UserManager<ApplicationUser> userManager;
+		private readonly UserManager<IdentityUser> userManager;
 
 		public DbInitializer(ApplicationDbContext db,
 			RoleManager<IdentityRole> roleManager,
-			UserManager<ApplicationUser> userManager)
+			UserManager<IdentityUser> userManager)
         {
 			this.db = db;
 			this.roleManager = roleManager;
@@ -47,20 +47,21 @@ namespace Store.DataAccess.DBInitializer
 				roleManager.CreateAsync(new IdentityRole(SD.Role_Admin)).GetAwaiter().GetResult();
 				roleManager.CreateAsync(new IdentityRole(SD.Role_Company)).GetAwaiter().GetResult();
 
-				ApplicationUser userAdmin = new ApplicationUser()
+				userManager.CreateAsync(new ApplicationUser
 				{
-					UserName = "admin@dotnetmastery.com",
-					Email = "admin@dotnetmastery.com",
-					Name = "Bhrugen Patel",
+					UserName = "admin@gmail.com",
+					Email = "admin@gmail.com",
+					Name = "Mohamed Anas",
 					PhoneNumber = "1112223333",
 					StreetAddress = "test 123 Ave",
 					State = "IL",
 					PostalCode = "23422",
 					City = "Chicago"
-				};
+				}, "Admin123*").GetAwaiter().GetResult();
 
-				userManager.CreateAsync(userAdmin, "Admin123*").GetAwaiter().GetResult();
-				userManager.AddToRoleAsync(userAdmin, SD.Role_Admin).GetAwaiter().GetResult();
+
+				ApplicationUser user = db.ApplicationUsers.FirstOrDefault(u => u.Email == "admin@gmail.com");
+				userManager.AddToRoleAsync(user, SD.Role_Admin).GetAwaiter().GetResult();
 			}
 		}
 	}
