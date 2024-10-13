@@ -18,5 +18,7 @@ namespace Store.Models
         [ForeignKey("Company")]
         public int? CompanyId { get; set; }
         public Company? Company { get; set; }
+        [NotMapped]
+        public string Role { get; set; }
     }
 }

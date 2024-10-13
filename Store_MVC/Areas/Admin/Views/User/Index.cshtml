@@ -1,0 +1,58 @@
+﻿@model List<ApplicationUser>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<partial name="_NotificationPartialView" />
+<div class="container">
+    <div class="row pt-4 pb-3">
+        <div class="col-6">
+            <h2 class="text-primary">
+                User List
+            </h2>
+        </div>
+       
+    </div>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Company</th>
+                <th>Role</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <td>
+                        @user.Name
+                    </td>
+                    <td>
+                        @user.Email
+                    </td>
+                    <td>
+                        @user.PhoneNumber
+                    </td>
+                    <td>
+                        @user.Company.Name
+                    </td>
+                    <td>
+                        @user.Role
+                    </td>
+
+                    <td>
+                        <a asp-controller="User" asp-action="Upsert" asp-route-id="@user.Id" class="btn btn-info mx-2">
+                            <i class="bi bi-pencil-square"></i> Edit
+                        </a>
+                    </td>
+                   
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
