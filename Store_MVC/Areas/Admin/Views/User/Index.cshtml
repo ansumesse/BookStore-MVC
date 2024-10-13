@@ -1,58 +1,96 @@
 ﻿@model List<ApplicationUser>
 @{
-    ViewData["Title"] = "Index";
+	ViewData["Title"] = "Index";
 }
 
 <partial name="_NotificationPartialView" />
 <div class="container">
-    <div class="row pt-4 pb-3">
-        <div class="col-6">
-            <h2 class="text-primary">
-                User List
-            </h2>
-        </div>
-       
-    </div>
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Company</th>
-                <th>Role</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var user in Model)
-            {
-                <tr>
-                    <td>
-                        @user.Name
-                    </td>
-                    <td>
-                        @user.Email
-                    </td>
-                    <td>
-                        @user.PhoneNumber
-                    </td>
-                    <td>
-                        @user.Company.Name
-                    </td>
-                    <td>
-                        @user.Role
-                    </td>
+	<div class="row pt-4 pb-3">
+		<div class="col-6">
+			<h2 class="text-primary">
+				User List
+			</h2>
+		</div>
 
-                    <td>
-                        <a asp-controller="User" asp-action="Upsert" asp-route-id="@user.Id" class="btn btn-info mx-2">
-                            <i class="bi bi-pencil-square"></i> Edit
-                        </a>
-                    </td>
-                   
-                </tr>
-            }
-        </tbody>
-    </table>
+	</div>
+	<table class="table table-bordered table-striped">
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Email</th>
+				<th>Phone</th>
+				<th>Company</th>
+				<th>Role</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var user in Model)
+			{
+				<tr>
+					<td>
+						@user.Name
+					</td>
+					<td>
+						@user.Email
+					</td>
+					<td>
+						@user.PhoneNumber
+					</td>
+					<td>
+						@user.Company.Name
+					</td>
+					<td>
+						@user.Role
+					</td>
+
+					@if (user.LockoutEnd is not null && user.LockoutEnd > DateTime.Now)
+					{
+						// locked
+						<td>
+							<a onclick=LockUnlock('@user.Id') class="btn btn-danger mx-2">
+								<i class="bi bi-lock"></i> lock
+							</a>
+							<a asp-controller="User" asp-action="Permession" asp-route-id="@user.Id" class="btn btn-danger mx-2">
+								<i class="bi bi-pencil-square"></i> Permession
+							</a>
+						</td>
+					}
+					else
+					{
+						<td>
+							<a onclick=LockUnlock('@user.Id') class="btn btn-info mx-2">
+								<i class="bi bi-unlock"></i> Unlock
+							</a>
+							<a asp-controller="User" asp-action="Permession" asp-route-id="@user.Id" class="btn btn-danger mx-2">
+								<i class="bi bi-pencil-square"></i> Permession
+							</a>
+						</td>
+					}
+					
+				</tr>
+			}
+		</tbody>
+	</table>
 </div>
 
+@section Scripts{
+	<script>
+		function LockUnlock(id) {
+			$.ajax({
+				type: "POST",
+				url: '/Admin/User/LockUnlock',
+				data: JSON.stringify(id),
+				contentType: "application/json",
+				success: function (data) {
+					if (data.success) {
+						toastr.success(data.message);
+						setTimeout(function () {
+							location.reload();
+						}, 1000);
+					}
+				}
+			});
+		}
+	</script>
+}

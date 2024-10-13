@@ -32,5 +32,21 @@ namespace Store_MVC.Areas.Admin.Controllers
             }
             return View(users);
         }
+        [HttpPost]
+        public IActionResult LockUnlock([FromBody]string id)
+        {
+            var user = db.ApplicationUsers.FirstOrDefault(u => u.Id == id);
+            if(user.LockoutEnd is not null && user.LockoutEnd > DateTime.Now)
+            {
+                // user is locked we need to unlock him
+                user.LockoutEnd = DateTime.Now;
+            }
+            else
+            {
+                user.LockoutEnd = DateTime.Now.AddYears(100);
+            }
+            db.SaveChanges();
+            return Json(new { success = true, message = "Operation Successful" });
+        }
     }
 }
