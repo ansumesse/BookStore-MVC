@@ -2,7 +2,7 @@
 using Store.DataAccess.Repository.IRepository;
 using Store.Models;
 
-namespace Store_MVC.Areas.Admin.Controllers
+namespace BookStore.Areas.Admin.Controllers
 {
     [Area("Admin")]
     

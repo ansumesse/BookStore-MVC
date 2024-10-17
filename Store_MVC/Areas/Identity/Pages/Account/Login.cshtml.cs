@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 
-namespace Store_MVC.Areas.Identity.Pages.Account
+namespace BookStore.Areas.Identity.Pages.Account
 {
     public class LoginModel : PageModel
     {

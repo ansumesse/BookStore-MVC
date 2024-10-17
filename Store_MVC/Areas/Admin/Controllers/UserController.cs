@@ -5,7 +5,7 @@ using Store.DataAccess.Data;
 using Store.Models;
 using Store.Utility;
 
-namespace Store_MVC.Areas.Admin.Controllers
+namespace BookStore.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Authorize(Roles = SD.Role_Admin)]

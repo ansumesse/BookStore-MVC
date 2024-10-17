@@ -24,7 +24,7 @@ using Store.DataAccess.Repository.IRepository;
 using Store.Models;
 using Store.Utility;
 
-namespace Store_MVC.Areas.Identity.Pages.Account
+namespace BookStore.Areas.Identity.Pages.Account
 {
     public class RegisterModel : PageModel
     {

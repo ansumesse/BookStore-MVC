@@ -6,7 +6,7 @@ using Store.Utility;
 using System.Diagnostics;
 using System.Security.Claims;
 
-namespace Store_MVC.Areas.Customer.Controllers
+namespace BookStore.Areas.Customer.Controllers
 {
     [Area("Customer")]
     public class HomeController : Controller

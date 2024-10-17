@@ -11,7 +11,7 @@ using Stripe.Checkout;
 using System.Diagnostics;
 using System.Security.Claims;
 
-namespace Store_MVC.Areas.Admin.Controllers
+namespace BookStore.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Authorize]

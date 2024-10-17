@@ -7,7 +7,7 @@ using Store.Utility;
 using Stripe.Checkout;
 using System.Security.Claims;
 
-namespace Store_MVC.Areas.Customer.Controllers
+namespace BookStore.Areas.Customer.Controllers
 {
 	[Area("Customer")]
 	[Authorize]

@@ -23,7 +23,7 @@ using Store.Utility;
 using Store.DataAccess.Repository;
 using Store.DataAccess.Repository.IRepository;
 
-namespace Store_MVC.Areas.Identity.Pages.Account
+namespace BookStore.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class ExternalLoginModel : PageModel

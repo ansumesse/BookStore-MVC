@@ -4,7 +4,7 @@ using Store.Utility;
 using Stripe;
 using System.Security.Claims;
 
-namespace Store_MVC.ViewComponents
+namespace BookStore.ViewComponents
 {
     public class ShoppingCartViewComponent : ViewComponent
     {

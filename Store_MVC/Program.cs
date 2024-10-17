@@ -9,7 +9,7 @@ using Stripe;
 using Store.DataAccess.DBInitializer;
 
 
-namespace Store_MVC
+namespace BookStore
 {
     public class Program
     {

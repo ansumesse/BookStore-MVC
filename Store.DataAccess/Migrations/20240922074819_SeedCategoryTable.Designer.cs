@@ -24,7 +24,7 @@ namespace Store.DataAccess.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Store_MVC.Models.Category", b =>
+            modelBuilder.Entity("BookStore.Models.Category", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
