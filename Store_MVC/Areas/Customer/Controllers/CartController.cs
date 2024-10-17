@@ -151,7 +151,7 @@ namespace Store_MVC.Areas.Customer.Controllers
 			if (applicationUser.CompanyId.GetValueOrDefault() == 0)
 			{
 				// Regular User Should Pay
-				var domain = "http://localhost:40220/";
+				var domain = Request.Scheme + "://" + Request.Host.Value + "/"; 
 				var options = new Stripe.Checkout.SessionCreateOptions
 				{
 					SuccessUrl = domain +$"Customer/Cart/OrderConfirmation?id={ShoppingCartVM.OrderHeader.Id}",
