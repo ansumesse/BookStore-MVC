@@ -172,9 +172,9 @@ namespace Store_MVC.Areas.Admin.Controllers
             OrderVM.OrderHeader = unitOfWork.OrderHeader.Get(o => o.Id == OrderVM.OrderHeader.Id);
             OrderVM.OrderDetails = unitOfWork.OrderDetail.GetAll(o => o.OrderHeaderId == OrderVM.OrderHeader.Id, includeProperties: "Product");
 
-            // stripe logic
-            var domain = "http://localhost:40220/";
-			var options = new SessionCreateOptions
+			// stripe logic
+			var domain = Request.Scheme + "://" + Request.Host.Value + "/"; 
+            var options = new SessionCreateOptions
 			{
 				SuccessUrl = domain + $"admin/order/orderConfirmation?orderHeaderId={OrderVM.OrderHeader.Id}",
                 CancelUrl = domain + $"admin/order/Details?orderId={OrderVM.OrderHeader.Id}",
